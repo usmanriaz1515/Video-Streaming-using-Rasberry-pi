@@ -1,0 +1,53 @@
+//Warning: The installer will replace various files, so backup all your data.
+
+//See also Addition section for tips on installing from scratch.
+
+//Step 1: Install Raspbian on your RPi
+//Step 2: Attach camera to RPi
+
+//Step 3: Important : Enable camera support (http://www.raspberrypi.org/camera)
+//Step 4: Update your RPi with the following commands:
+
+sudo apt-get update
+sudo apt-get dist-upgrade
+Occasionally if camera core software updates have been done then a sudo rpi-update may be used to benefit from these before they become available as standard.
+
+//Step 4:
+
+For Jessie Lite run sudo apt-get install git
+
+Clone the code from github and enable and run the install script with the following commands:
+	
+git clone https://github.com/silvanmelchior/RPi_Cam_Web_Interface.git
+cd RPi_Cam_Web_Interface
+./install.sh
+
+//Older versions needed the scripts to be made executable with chmod u+x *.sh If you get permission denied while trying to run the install scripts then try that step
+	
+//6 separate scripts are provided to do separate installation and maintenance functions.
+
+//The scripts are
+
+install.sh main installation as used in step 4 above
+update.sh check for updates and then run main installation
+start.sh starts the software. If already running it restarts.
+stop.sh stops the software
+remove.sh removes the software
+debug.sh is same as start but allows raspimjpeg output to console for debugging
+To run these scripts make sure you are in the RPi_Cam_Web_Interface folder then precede the script with a ./
+E.g. To update an existing installation ./update.sh
+E.g. To start the camera software ./start.sh
+E.g. To stop the camera software ./stop.sh
+The main installation always does the same thing to simplify its logic. It gathers all user parameters first in one combined dialog and then always applies the parameters as it goes through the process. Autostart should be yes if you want this software to start automatically when raspberry boots up. jpglink should normally be no. Change it to yes if you have external software that needs direct access to the cam.jpg image file.
+
+A phpversion parameter provides for a choice on which php version to use (5 or 7). php5 was used up until 2017-09-22. If there any difficulties using 7 or when upgrading older systems then try using 5.
+
+A q (quiet) parameter may be used to skip this and give an automatic install based on config.txt All parameters are always in the config.txt file, a default version is created if one doesn't exist and is then changed just once after the initial user dialog. The installation always tries to upgrade the main software components and then functionally goes through the configuration steps for each area like apache, motion start up.
+
+After the setup finishes it offers to start the camera system. It will also start on a reboot if autostart was configured.
+
+Step 5: Use it
+
+Open up any browser on any computer in your network and enter the url to access the camera web site. This will be http://ipAddress:port/subfolder. If the port had been left at default 80 during install then this may be left out. Similarly the subfolder (default html) can be left out if that was cleared during the install. So for a port 80, no subfolder install the url becomes http://ipAddress
+
+IMPORTANT NOTE: If you need to change any files then you need to do these in the run time version (e.g. in the /var/www/html folder or /etc/raspimjpeg). Changing files in the RPi_Cam_Web_Interface folder has no immediate effect. These are just copies used during the install.
